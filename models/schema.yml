@@ -4,11 +4,6 @@ sources:
   - name: raw
     schema: gz_raw_data
     description: "Raw Greenweez data from BigQuery"
-    freshness:
-      warn_after:
-        count: 90
-        period: day
-    loaded_at_field: "CAST(date_date AS TIMESTAMP)"
     tables:
       - name: sales
         identifier: raw_gz_sales
@@ -52,13 +47,3 @@ sources:
             description: "Logistics cost"
           - name: ship_cost
             description: "Shipping cost"
-```
-
-Save, then run:
-```
-dbt build
-```
-
-Then:
-```
-dbt source freshness
