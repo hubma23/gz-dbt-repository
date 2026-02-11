@@ -3,10 +3,62 @@ version: 2
 sources:
   - name: raw
     schema: gz_raw_data
+    description: "Raw Greenweez data from BigQuery"
+    freshness:
+      warn_after:
+        count: 90
+        period: day
+    loaded_at_field: "CAST(date_date AS TIMESTAMP)"
     tables:
       - name: sales
         identifier: raw_gz_sales
+        description: "Raw sales transactions data"
+        columns:
+          - name: date_date
+            description: "Date of the transaction"
+          - name: orders_id
+            description: "Unique order identifier"
+          - name: pdt_id
+            description: "Product identifier"
+          - name: revenue
+            description: "Revenue from the sale"
+          - name: quantity
+            description: "Quantity sold"
+
       - name: product
         identifier: raw_gz_product
+        description: "Product reference data"
+        columns:
+          - name: products_id
+            description: "Unique product identifier"
+            tests:
+              - unique
+              - not_null
+          - name: purchSE_PRICE
+            description: "Purchase price"
+
       - name: ship
         identifier: raw_gz_ship
+        description: "Shipping data per order"
+        columns:
+          - name: orders_id
+            description: "Unique order identifier"
+            tests:
+              - unique
+              - not_null
+          - name: shipping_fee
+            description: "Shipping fee charged"
+          - name: logCost
+            description: "Logistics cost"
+          - name: ship_cost
+            description: "Shipping cost"
+```
+
+Save, then run:
+```
+dbt build
+```
+
+Then:
+```
+dbt source freshness
